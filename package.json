@@ -1,0 +1,117 @@
+{
+  "name": "jsd-debug",
+  "displayName": "JSD Debug",
+  "version": "0.1.0",
+  "publisher": "zjurelinac",
+  "description": "VS Code integration of JSD JavaScript debugger.",
+  "author": {
+    "name": "Zvonimir Jurelinac",
+    "email": "zjurelinac@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.18.0",
+    "node": "^7.9.0"
+  },
+  "icon": "images/mock-debug-icon.png",
+  "categories": [
+    "Debuggers"
+  ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zjurelinac/vscode-jsd-debug.git"
+  },
+  "scripts": {
+    "prepublish": "tsc -p ./src",
+    "compile": "tsc -p ./src",
+    "tslint": "tslint ./src/**/*.ts",
+    "watch": "tsc -w -p ./src",
+    "test": "mocha -u tdd ./out/tests/",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "dependencies": {
+    "async-lock": "^1.1.2",
+    "await-notify": "1.0.1",
+    "vscode-debugadapter": "1.26.0",
+    "vscode-debugprotocol": "1.26.0"
+  },
+  "devDependencies": {
+    "@types/node": "7.0.43",
+    "@types/mocha": "2.2.45",
+    "typescript": "2.6.2",
+    "mocha": "4.0.1",
+    "vscode": "1.1.10",
+    "vscode-debugadapter-testsupport": "1.26.0",
+    "tslint": "5.8.0",
+    "vsce": "1.35.0"
+  },
+  "main": "./out/extension",
+  "activationEvents": [
+    "onDebug",
+    "onCommand:extension.mock-debug.getProgramName"
+  ],
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "javascript"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "jsd",
+        "label": "(JSD) Debug",
+        "program": "./out/debugAdapter.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to the JSD-enabled program.",
+                "default": ""
+              },
+              "js_root": {
+                "type": "string",
+                "description": "Absolute path to the root JavaScript source folder.",
+                "default": "${workspaceFolder}/js"
+              },
+              "trace": {
+                "type": "boolean",
+                "description": "Enable logging of the Debug Adapter Protocol.",
+                "default": true
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "jsd",
+            "request": "launch",
+            "name": "(JSD) Launch program",
+            "program": "",
+            "js_root": "${workspaceFolder}/js"
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "JSD Debug: Launch",
+            "description": "A new configuration for JSD-based JavaScript debugging.",
+            "body": {
+              "type": "jsd",
+              "request": "launch",
+              "name": "(JSD) Launch program",
+              "program": "",
+              "js_root": "${workspaceFolder}/js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
